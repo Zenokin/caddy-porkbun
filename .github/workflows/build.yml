@@ -55,10 +55,12 @@ jobs:
             build=false
           fi
 
-          echo "version=version">>"GITHUB_OUTPUT"
-          echo "tag=tag">>"GITHUB_OUTPUT"
-          echo "image=image">>"GITHUB_OUTPUT"
-          echo "build=build">>"GITHUB_OUTPUT"
+          {
+            echo "version=$version"
+            echo "tag=$tag"
+            echo "image=$image"
+            echo "build=$build"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Build and publish
         if: steps.caddy.outputs.build == 'true'
@@ -69,7 +71,7 @@ jobs:
           build-args: |
             CADDY_VERSION=${{ steps.caddy.outputs.version }}
           tags: |
-            {{ steps.caddy.outputs.image }}:{{ steps.caddy.outputs.version }}
+            ${{ steps.caddy.outputs.image }}:${{ steps.caddy.outputs.version }}
 
       - name: Tag successfully published version
         if: steps.caddy.outputs.build == 'true'
